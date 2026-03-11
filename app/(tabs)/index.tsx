@@ -1,98 +1,87 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React from 'react';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+// อิมพอร์ต Components ที่เราเพิ่งสร้างขึ้นมา
+import CustomButton from '../../components/CustomButton';
+import CustomTextInput from '../../components/CustomTextInput';
 
-import { HelloWave } from '@/components/hello-wave';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Link } from 'expo-router';
-
-export default function HomeScreen() {
+export default function LoginScreen() {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction title="Action" icon="cube" onPress={() => alert('Action pressed')} />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert('Share pressed')}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert('Delete pressed')}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
+    <SafeAreaView style={styles.container}>
+      
+      <View style={styles.logoContainer}>
+        <Text style={styles.logoIcon}>🛠️</Text>
+        <Text style={styles.logoText}>SUT FixIt</Text>
+      </View>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      <Text style={styles.title}>Login</Text>
+
+      {/* เรียกใช้ Component ช่องกรอกข้อมูล */}
+      <CustomTextInput 
+        label="ชื่อผู้ใช้งาน" 
+        placeholder="รหัสนักศึกษา หรือ อีเมล" 
+      />
+
+      {/* เรียกใช้ Component ช่องกรอกข้อมูลแบบซ่อนรหัสผ่าน */}
+      <CustomTextInput 
+        label="รหัสผ่าน" 
+        placeholder="กรอกรหัสผ่าน" 
+        secureTextEntry={true} 
+      />
+
+      {/* เรียกใช้ Component ปุ่มกด */}
+      <CustomButton 
+        title="เข้าสู่ระบบ" 
+        onPress={() => alert('กดปุ่มเข้าสู่ระบบแล้ว!')} 
+      />
+
+      <View style={styles.linkContainer}>
+        <TouchableOpacity>
+          <Text style={styles.linkText}>สมัครสมาชิก</Text>
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Text style={styles.linkText}>ลืมรหัสผ่าน?</Text>
+        </TouchableOpacity>
+      </View>
+
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 30,
+    justifyContent: 'center',
+  },
+  logoContainer: {
     alignItems: 'center',
-    gap: 8,
+    marginBottom: 40,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  logoIcon: {
+    fontSize: 50,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  logoText: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FF7A00',
+    marginTop: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#333',
+  },
+  linkContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 25,
+  },
+  linkText: {
+    color: '#333',
+    fontSize: 14,
+    fontWeight: '500',
   },
 });
