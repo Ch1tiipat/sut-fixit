@@ -1,50 +1,55 @@
-# Welcome to your Expo app 👋
+วิธีดึงโค้ด SUT FixIt ไปรันในเครื่องตัวเอง (สำหรับคนในทีม)
+📌 สิ่งที่ต้องมีในเครื่องก่อนเริ่ม:
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+1.โปรแกรม VS Code, Node.js, และ Git (ติดตั้งลงในคอมพิวเตอร์ให้เรียบร้อย)
 
-## Get started
+2.แอป Expo Go (โหลดติดมือถือไว้ ได้ทั้ง iOS และ Android)
 
-1. Install dependencies
+🚀 ขั้นตอนการดึงโค้ดไปรัน (ทำทีละบรรทัดนะ):
 
-   ```bash
-   npm install
-   ```
+1.สร้างโฟลเดอร์เปล่าๆ ไว้ที่ไหนก็ได้ในคอมพิวเตอร์ (เช่น ในไดรฟ์ D หรือหน้า Desktop) แล้วคลิกขวาเปิดโฟลเดอร์นั้นด้วย VS Code
 
-2. Start the app
+2.ไปที่เมนู Terminal > New Terminal
 
-   ```bash
-   npx expo start
-   ```
+3.พิมพ์คำสั่งดึงโค้ดจาก GitHub ของกลุ่มเรา (ก็อปปี้บรรทัดนี้ไปวางแล้วกด Enter):
 
-In the output, you'll find options to open the app in a
+git clone https://github.com/Ch1tiipat/sut-fixit.git
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+4.พิมพ์คำสั่งเพื่อย้ายเข้าไปในโฟลเดอร์โปรเจกต์:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+cd sut-fixit
 
-## Get a fresh project
+5.พิมพ์คำสั่งนี้เพื่อดาวน์โหลดไฟล์ระบบ node_modules กลับมา:
 
-When you're ready, run:
+npm install
 
-```bash
-npm run reset-project
-```
+6.พิมพ์คำสั่งเพื่อรันเซิร์ฟเวอร์แอปพลิเคชัน:
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+npx expo start
 
-## Learn more
+7.จะมี QR Code โผล่ขึ้นมาบนหน้าจอคอม
+-ถ้าทำงานต่อ กด a จะเปิดเซิฟเวอร์ 
+------------------------------------------------------------------------
+เสริมตอนทำส่วนของตัวเองเสร็จแล้ว
+ใช้ 3 คำสั่งนี้ (ทีละบรรทัด):
+Bash
+git add .
+git commit -m "บอกสั้นๆ ว่าแก้หน้าไหนไป"
+git push
 
-To learn more about developing your project with Expo, look at the following resources:
+------------------------------------------------------------------------
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+วิธีดึงโค้ด SUT FixIt ไปทำต่อ (สำหรับคนใช้ Android Studio)
+ขั้นตอนการดึงโค้ดไปรัน (ทำทีละบรรทัดนะ):
+1.สร้างโฟลเดอร์เปล่าๆ ไว้ที่ไหนก็ได้ แล้วคลิกขวาเปิดโฟลเดอร์นั้นด้วย VS Code
+2.ไปที่เมนู Terminal > New Terminal
+3.พิมพ์คำสั่งดึงโค้ด (ก็อปปี้ไปวางแล้วกด Enter):
+git clone https://github.com/Ch1tiipat/sut-fixit.git
+4.พิมพ์คำสั่งเพื่อย้ายเข้าไปในโฟลเดอร์โปรเจกต์:
+cd sut-fixit
+5.พิมพ์คำสั่งนี้เพื่อดาวน์โหลดไฟล์ระบบกลับมา:
+npm install
+6.เปิดโปรแกรม Android Studio ไปที่ Virtual Device Manager แล้วกดปุ่ม Play (▶️) เพื่อเปิดหน้าจอมือถือจำลองขึ้นมารอไว้เลย
+7.กลับมาที่ VS Code พิมพ์คำสั่งรันเซิร์ฟเวอร์:
+npx expo start
+8.เมื่อ QR Code ขึ้นมา ให้กดปุ่มตัวอักษร a บนคีย์บอร์ด 1 ครั้ง เพื่อให้แอปเด้งไปเปิดบน Android Studio (ถ้ามีถามให้ติดตั้ง Expo Go ลงมือถือจำลอง ให้พิมพ์ y แล้วกด Enter)
