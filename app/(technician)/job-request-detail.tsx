@@ -12,13 +12,12 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from '../../constants/firebaseConfig';
 
 export default function TechJobDetail() {
-  const { id } = useLocalSearchParams(); // รับ Job ID มาจากหน้าลิสต์งาน
+  const { id } = useLocalSearchParams(); 
   const [job, setJob] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   
-  // --- State สำหรับข้อมูลการปิดงาน ---
-  const [finishDetail, setFinishDetail] = useState(""); // รายละเอียดสิ่งที่ซ่อม
-  const [finishImage, setFinishImage] = useState<string | null>(null); // รูปหลังซ่อมเสร็จ
+  const [finishDetail, setFinishDetail] = useState(""); 
+  const [finishImage, setFinishImage] = useState<string | null>(null); 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -32,37 +31,44 @@ export default function TechJobDetail() {
     })();
   }, [id]);
 
-  // 🛠️ ฟังก์ชันเลือกรูปภาพหลังซ่อม (เหมือนหน้า User)
   const pickFinishImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 0.5,
-    });
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        quality: 0.5,
+      });
 
-    if (!result.canceled && result.assets?.length > 0) {
-      setFinishImage(result.assets[0].uri);
+      if (!result.canceled && result.assets?.length > 0) {
+        setFinishImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  // ➕ เพิ่มฟังก์ชันถ่ายรูปจากกล้อง
   const takeFinishPhoto = async () => {
-    const permission = await ImagePicker.requestCameraPermissionsAsync();
-    if (!permission.granted) {
-      Alert.alert("แจ้งเตือน", "กรุณาอนุญาตการเข้าถึงกล้อง");
-      return;
-    }
-    const result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      quality: 0.5,
-    });
+    try {
+      const permission = await ImagePicker.requestCameraPermissionsAsync();
+      if (!permission.granted) {
+        Alert.alert("แจ้งเตือน", "กรุณาอนุญาตการเข้าถึงกล้อง");
+        return;
+      }
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images, 
+        allowsEditing: true,
+        quality: 0.5,
+      });
 
-    if (!result.canceled && result.assets?.length > 0) {
-      setFinishImage(result.assets[0].uri);
+      if (!result.canceled && result.assets?.length > 0) {
+        setFinishImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert("ผิดพลาด", "ไม่สามารถเปิดกล้องได้");
     }
   };
 
-  // ✅ ฟังก์ชันปิดงาน/ส่งงาน (อัปโหลดรูปไป tech_finishes)
   const handleCloseJob = async () => {
     if (!finishDetail || !finishImage) {
       Alert.alert("ข้อมูลไม่ครบ", "กรุณาระบุรายละเอียดการซ่อมและแนบรูปถ่ายยืนยัน");
@@ -73,7 +79,6 @@ export default function TechJobDetail() {
       setIsSubmitting(true);
       let finishUrl = "";
 
-      // 1. อัปโหลดรูปไปที่โฟลเดอร์ tech_finishes ใน Storage
       const blob: any = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.onload = () => resolve(xhr.response);
@@ -88,7 +93,6 @@ export default function TechJobDetail() {
       finishUrl = await getDownloadURL(storageRef);
       if (blob.close) blob.close();
 
-      // 2. อัปเดต Firestore (เปลี่ยนสถานะและเพิ่มข้อมูลการซ่อม)
       const jobRef = doc(db, "Reports", id as string);
       await updateDoc(jobRef, {
         status: "ซ่อมแซมเสร็จสิ้น",
@@ -97,7 +101,6 @@ export default function TechJobDetail() {
         finishedAt: serverTimestamp(),
       });
 
-      // 3. แจ้งเตือนกลับไปหา User (นักศึกษา)
       await addDoc(collection(db, "Notifications"), {
         targetUid: job.userId,
         title: "งานซ่อมของคุณเสร็จสิ้นแล้ว ✅",
@@ -131,21 +134,32 @@ export default function TechJobDetail() {
         <View style={{ width: 28 }} />
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* ข้อมูลปัญหาจากนักศึกษา */}
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        
+        {/* 📸 แก้ไขส่วนนี้: ให้แสดงภาพที่นักศึกษาอัปโหลดมาได้ "ทุกรูป" */}
         <View style={styles.infoCard}>
           <Text style={styles.sectionTitle}>ข้อมูลจากนักศึกษา</Text>
           <Text style={styles.infoText}><Text style={styles.bold}>หอพัก:</Text> {job?.dorm} ห้อง {job?.room}</Text>
           <Text style={styles.infoText}><Text style={styles.bold}>ปัญหา:</Text> {job?.title}</Text>
           <Text style={styles.infoText}><Text style={styles.bold}>รายละเอียด:</Text> {job?.detail}</Text>
-          {job?.images?.[0] && (
-            <Image source={{ uri: job.images[0] }} style={styles.jobImage} resizeMode="cover" />
+          
+          <Text style={[styles.bold, { marginTop: 15, marginBottom: 8, color: '#111827' }]}>ภาพประกอบ (เลื่อนดูได้):</Text>
+          {job?.images && job.images.length > 0 ? (
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {job.images.map((imgUri: string, index: number) => (
+                <Image key={index} source={{ uri: imgUri }} style={styles.jobImageGallery} resizeMode="cover" />
+              ))}
+            </ScrollView>
+          ) : (
+            <View style={styles.noImagePlaceholder}>
+              <Ionicons name="image-outline" size={32} color="#9CA3AF" />
+              <Text style={{ color: '#9CA3AF', marginTop: 5 }}>นักศึกษาไม่ได้แนบภาพ</Text>
+            </View>
           )}
         </View>
 
         <View style={styles.divider} />
 
-        {/* ส่วนของช่างสำหรับปิดงาน */}
         <View style={styles.techSection}>
           <Text style={styles.sectionTitle}>ยืนยันการซ่อมเสร็จสิ้น</Text>
           
@@ -167,7 +181,6 @@ export default function TechJobDetail() {
               </TouchableOpacity>
             </View>
           ) : (
-            // 🛠️ แยก 2 ปุ่มให้ชัดเจน
             <View style={{ flexDirection: 'row', gap: 10 }}>
               <TouchableOpacity style={[styles.uploadBtn, { flex: 1, padding: 20 }]} onPress={pickFinishImage}>
                 <Ionicons name="image" size={40} color="#F28C28" />
@@ -206,7 +219,11 @@ const styles = StyleSheet.create({
   sectionTitle: { fontSize: 18, fontWeight: '700', marginBottom: 12, color: '#111827' },
   infoText: { fontSize: 15, marginBottom: 5, color: '#4B5563' },
   bold: { fontWeight: '700', color: '#111827' },
-  jobImage: { width: '100%', height: 180, borderRadius: 12, marginTop: 10 },
+  
+  /* 📸 สไตล์ใหม่สำหรับ Scroll ดูรูปของนักศึกษา */
+  jobImageGallery: { width: 220, height: 180, borderRadius: 12, marginRight: 12, backgroundColor: '#F3F4F6' },
+  noImagePlaceholder: { height: 120, backgroundColor: '#F9FAFB', borderRadius: 12, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#E5E7EB', borderStyle: 'dashed' },
+  
   divider: { height: 1, backgroundColor: '#E5E7EB', marginVertical: 25 },
   techSection: { paddingBottom: 40 },
   label: { fontSize: 16, fontWeight: '600', marginBottom: 8, color: '#374151' },
