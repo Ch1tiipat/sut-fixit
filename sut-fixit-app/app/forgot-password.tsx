@@ -3,7 +3,6 @@ import { router } from 'expo-router';
 import React, { useState } from 'react';
 import {
   Alert,
-  Image,
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
@@ -15,20 +14,14 @@ import {
   View,
 } from 'react-native';
 
-// นำเข้า Firebase Auth
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-
-// ✅ 1. นำเข้า Firestore เพื่อใช้เช็คอีเมลในฐานข้อมูล
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from '../constants/firebaseConfig'; // เช็ค path ให้ตรงกับไฟล์ของคุณด้วยนะครับ
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // ฟังก์ชันขอรีเซ็ตรหัสผ่าน
   const handleResetPassword = async () => {
-    const trimmedEmail = email.trim();
+    const trimmedEmail = email.trim().toLowerCase();
     if (!trimmedEmail) {
       Alert.alert('แจ้งเตือน', 'กรุณากรอกอีเมลที่ใช้ลงทะเบียน');
       return;
@@ -36,35 +29,25 @@ export default function ForgotPasswordScreen() {
 
     setIsSubmitting(true);
     try {
-      // ✅ 2. เช็คใน Firestore ก่อนว่ามีอีเมลนี้ในระบบหรือไม่
-      const q = query(collection(db, "Users"), where("email", "==", trimmedEmail.toLowerCase()));
-      const querySnapshot = await getDocs(q);
-
-      if (querySnapshot.empty) {
-        // ถ้าหาไม่เจอ ให้เด้งเตือนและหยุดการทำงานทันที
-        Alert.alert('ข้อผิดพลาด', 'ไม่พบอีเมลนี้ในระบบ กรุณาตรวจสอบให้ถูกต้อง หรือสมัครสมาชิกใหม่');
-        setIsSubmitting(false);
-        return;
-      }
-
-      // ✅ 3. ถ้าเจออีเมลในฐานข้อมูล ค่อยส่งลิงก์รีเซ็ต
       const auth = getAuth();
       await sendPasswordResetEmail(auth, trimmedEmail);
-      
+
       Alert.alert(
-        'ส่งลิงก์สำเร็จ!', 
-        `ระบบได้ส่งลิงก์สำหรับตั้งรหัสผ่านใหม่ไปที่อีเมล\n${trimmedEmail}\nกรุณาตรวจสอบกล่องจดหมายของคุณ`,
-        [{ text: 'กลับไปหน้าเข้าสู่ระบบ', onPress: () => router.replace('/login') }]
+        'ส่งลิงก์สำเร็จ! ✅',
+        `ระบบได้ส่งลิงก์รีเซ็ตรหัสผ่านไปที่\n${trimmedEmail}\n\nกรุณาตรวจสอบกล่องจดหมาย (และโฟลเดอร์ Spam)`,
+        [{ text: 'กลับไปหน้า Login', onPress: () => router.replace('/login') }]
       );
 
     } catch (error: any) {
-      console.error("Reset Password Error:", error);
+      console.error("Reset Password Error:", error.code, error.message);
       if (error.code === 'auth/user-not-found') {
-        Alert.alert('ข้อผิดพลาด', 'ไม่พบอีเมลนี้ในระบบบัญชีผู้ใช้');
+        Alert.alert('ข้อผิดพลาด', 'ไม่พบอีเมลนี้ในระบบ กรุณาตรวจสอบหรือสมัครสมาชิกใหม่');
       } else if (error.code === 'auth/invalid-email') {
         Alert.alert('ข้อผิดพลาด', 'รูปแบบอีเมลไม่ถูกต้อง');
+      } else if (error.code === 'auth/too-many-requests') {
+        Alert.alert('ข้อผิดพลาด', 'ส่งคำขอบ่อยเกินไป กรุณารอสักครู่แล้วลองใหม่');
       } else {
-        Alert.alert('ข้อผิดพลาด', 'ไม่สามารถส่งลิงก์ได้ กรุณาลองใหม่อีกครั้ง');
+        Alert.alert('ข้อผิดพลาด', `ไม่สามารถส่งลิงก์ได้\n${error.message}`);
       }
     } finally {
       setIsSubmitting(false);
@@ -73,12 +56,12 @@ export default function ForgotPasswordScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <KeyboardAvoidingView 
-        style={styles.keyboardAvoid} 
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoid}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
-          
+
           {/* ปุ่มย้อนกลับ */}
           <View style={styles.header}>
             <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
@@ -103,10 +86,10 @@ export default function ForgotPasswordScreen() {
               <Text style={styles.label}>อีเมล (Email)</Text>
               <View style={styles.inputWrapper}>
                 <Ionicons name="mail-outline" size={20} color="#9CA3AF" style={styles.inputIcon} />
-                <TextInput 
-                  style={styles.input} 
-                  value={email} 
-                  onChangeText={setEmail} 
+                <TextInput
+                  style={styles.input}
+                  value={email}
+                  onChangeText={setEmail}
                   placeholder="กรอกอีเมลของคุณ"
                   placeholderTextColor="#9CA3AF"
                   autoCapitalize="none"
@@ -115,15 +98,14 @@ export default function ForgotPasswordScreen() {
               </View>
             </View>
 
-            {/* ปุ่มส่งข้อมูล */}
-            <TouchableOpacity 
-              style={[styles.submitBtn, isSubmitting && { backgroundColor: '#FDBA74' }]} 
-              activeOpacity={0.8} 
+            <TouchableOpacity
+              style={[styles.submitBtn, isSubmitting && { backgroundColor: '#FDBA74' }]}
+              activeOpacity={0.8}
               onPress={handleResetPassword}
               disabled={isSubmitting}
             >
               <Text style={styles.submitBtnText}>
-                {isSubmitting ? 'กำลังตรวจสอบและส่งลิงก์...' : 'ส่งลิงก์รีเซ็ตรหัสผ่าน'}
+                {isSubmitting ? 'กำลังส่งลิงก์...' : 'ส่งลิงก์รีเซ็ตรหัสผ่าน'}
               </Text>
             </TouchableOpacity>
           </View>

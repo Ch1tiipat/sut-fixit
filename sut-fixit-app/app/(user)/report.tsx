@@ -220,8 +220,21 @@ export default function ReportScreen() {
         {/* ข้อมูลปัญหา */}
         <View style={styles.section}>
           <Text style={styles.label}>ข้อมูลปัญหา</Text>
-          <TextInput style={styles.input} placeholder="หัวข้อปัญหา (เช่น แอร์ไม่เย็น)" value={issueTitle} onChangeText={setIssueTitle}/>
-          <TextInput style={[styles.input,styles.textArea,{marginTop:12}]} multiline placeholder="รายละเอียดเพิ่มเติม..." value={detail} onChangeText={setDetail}/>
+          <TextInput 
+  style={styles.input} 
+  placeholder="หัวข้อปัญหา (เช่น แอร์ไม่เย็น)" 
+  placeholderTextColor="#9CA3AF"
+  value={issueTitle} 
+  onChangeText={setIssueTitle}
+/>
+          <TextInput 
+  style={[styles.input, styles.textArea, {marginTop:12}]} 
+  multiline 
+  placeholder="รายละเอียดเพิ่มเติม..." 
+  placeholderTextColor="#9CA3AF" 
+  value={detail} 
+  onChangeText={setDetail}
+/>
         </View>
 
         {/* หมวดหมู่ */}
@@ -304,8 +317,8 @@ const styles = StyleSheet.create({
   section: { marginBottom:20 },
   label: { fontSize:16, fontWeight:'600', marginBottom:8, color:'#374151' },
   card: { backgroundColor:'#FFF', padding:15, borderRadius:16, borderWidth:1, borderColor:'#E5E7EB' },
-  input: { backgroundColor:'#FFF', padding:15, borderRadius:12, borderWidth:1, borderColor:'#D1D5DB' },
-  textArea: { height:80, textAlignVertical:'top' },
+  input: { backgroundColor:'#FFF', padding:15, borderRadius:12, borderWidth:1, borderColor:'#D1D5DB', color:'#111827' },
+  textArea: { minHeight:100, textAlignVertical:'top', paddingTop:15 },
   dropdown: { flexDirection:'row', justifyContent:'space-between', alignItems:'center', backgroundColor:'#FFF', padding:15, borderRadius:12, borderWidth:1, borderColor:'#D1D5DB' },
   dropdownText: { fontSize:15, color:'#111827', fontWeight:'600' },
   gpsBtn: { backgroundColor:'#FFF', flexDirection:'row', padding:12, borderRadius:8, alignItems:'center' },
