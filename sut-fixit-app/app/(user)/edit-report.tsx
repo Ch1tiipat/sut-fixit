@@ -174,10 +174,10 @@ export default function EditReportScreen() {
 const styles = StyleSheet.create({
   safeArea: { flex: 1, backgroundColor: "#F9FAFB" },
   headerBar: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 16, backgroundColor: "#FFF", borderBottomWidth: 1, borderBottomColor: "#EEE" },
-  headerTitle: { fontSize: 18, fontWeight: "700" },
+  headerTitle: { fontSize: 18, fontWeight: "700", color: "#111827" },
   scrollContent: { padding: 20 },
   section: { marginBottom: 20 },
-  label: { fontSize: 16, fontWeight: "600", marginBottom: 8 },
+  label: { fontSize: 16, fontWeight: "600", marginBottom: 8, color: "#374151" },
   input: { backgroundColor: "#FFF", padding: 15, borderRadius: 12, borderWidth: 1, borderColor: "#D1D5DB" },
   card: { backgroundColor: "#FFF", padding: 15, borderRadius: 16, borderWidth: 1, borderColor: "#E5E7EB" },
   uploadBox: { borderStyle: "dashed", borderWidth: 2, borderColor: "#F28C28", borderRadius: 16, padding: 20, alignItems: "center", backgroundColor: "#FFF" },
