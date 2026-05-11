@@ -10,12 +10,9 @@
 
 | ช่องทาง | ลิ้งก์ |
 | :--- | :--- |
-<<<<<<< HEAD
-| **Expo Build (ล่าสุด)** | [ดาวน์โหลด APK ที่นี่](https://expo.dev/accounts/kittipatmusic/projects/sut-fixit-app/builds/4d3509e2-466c-4347-8afc-780381ad18f4) |
-=======
+| [ดาวน์โหลด APK ที่นี่](https://expo.dev/accounts/kittipatmusic/projects/sut-fixit-app/builds/4d3509e2-466c-4347-8afc-780381ad18f4) |
 | **GitHub Releases (ถาวร)** | [ดาวน์โหลด SUT FixIt v1.0.1](https://github.com/Kittipat050871/sut-fixit-app/releases/download/v1.0.1/SUT-FixIt-v1.0.apk) |
 | **Release Page** | [github.com/.../releases/tag/v1.0.1](https://github.com/Kittipat050871/sut-fixit-app/releases/tag/v1.0.1) |
->>>>>>> friend/main
 
 > ⚠️ ต้องเปิดใช้งาน **"ติดตั้งแอปจากแหล่งที่ไม่รู้จัก"** ในการตั้งค่า Android ก่อนติดตั้ง
 
